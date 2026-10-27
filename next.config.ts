@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  output: "standalone",
+  allowedDevOrigins: ["172.16.46.49"],
   turbopack: {
     rules: {
       "*.css": {
