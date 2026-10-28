@@ -1,0 +1,39 @@
+# Compose v2. No .env file is required.
+services:
+  line_frontend:
+    build:
+      context: .
+    restart: unless-stopped
+    init: true
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  web:
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    ports:
+      - "3577:8080"
+    environment:
+      # Backend on the same Docker host, published on port 4025.
+      BACKEND_ORIGIN: http://host.docker.internal:4025
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./deploy/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      line_frontend:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
