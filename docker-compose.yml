@@ -21,7 +21,7 @@ services:
     image: nginx:stable-alpine
     restart: unless-stopped
     ports:
-      - "3577:8080"
+      - "4024:8080"
     environment:
       # Backend on the same Docker host, published on port 4025.
       BACKEND_ORIGIN: http://host.docker.internal:4025

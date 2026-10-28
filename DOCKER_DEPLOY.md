@@ -28,7 +28,7 @@ docker compose logs --tail=100 web line_frontend
 ก่อน pull อย่าเขียนทับ .env หรือ local changes แบบไม่ตรวจสอบ
 ตั้งเครื่องมือ deploy ให้เรียก docker compose v2 ไม่ใช่ fallback docker-compose v1
 
-เข้า http://IP-เซิร์ฟเวอร์:3577/login
+เข้า http://IP-เซิร์ฟเวอร์:4024/login
 หากต้องการเปลี่ยนพอร์ตเว็บ แก้ซ้ายของ ports: เช่น 4080:8080
 อย่าเปลี่ยนพอร์ตภายใน 8080 โดยไม่แก้ nginx ให้ตรงกัน
 
@@ -37,13 +37,13 @@ docker compose logs --tail=100 web line_frontend
 
 ## ตรวจสอบ
 
-- GET http://IP-เซิร์ฟเวอร์:3577/login ต้องแสดงหน้า Login
+- GET http://IP-เซิร์ฟเวอร์:4024/login ต้องแสดงหน้า Login
 - POST /api/login จากเว็บต้องไป Backend 4025 ไม่ใช่ localhost ของผู้ใช้
 - 502 จาก /api หมายถึง nginx เชื่อม Backend ไม่สำเร็จ ให้ตรวจ Backend และ firewall
 - 401 จาก /api/login หมายถึงไปถึง Backend แล้ว ให้ตรวจบัญชี/รหัสผ่าน
 - ทดสอบ Login รายการกลุ่ม Template ประวัติ และอัปโหลดรูป
 
-พอร์ต 3577 มีเว็บและ API จัดการสำหรับใช้ภายใน ให้จำกัดการเข้าถึงตามเครือข่ายองค์กร
+พอร์ต 4024 มีเว็บและ API จัดการสำหรับใช้ภายใน ให้จำกัดการเข้าถึงตามเครือข่ายองค์กร
 HTTPS สาธารณะสำหรับ LINE ให้ทีมเครือข่ายเปิดเฉพาะ Webhook กับรูปไป Backend
 อย่าเปิดเว็บทั้งชุดออกสาธารณะโดยไม่กำหนดขอบเขต
 
