@@ -37,6 +37,19 @@ docker compose logs --tail=100 web line_frontend
 
 ## ตรวจสอบ
 
+หาก build ผ่านแต่ container unhealthy ให้ตรวจ runtime และผล healthcheck:
+
+```sh
+docker compose logs --tail=100 line_frontend
+docker inspect --format '{{json .State.Health}}' "$(docker compose ps -q line_frontend)"
+docker compose exec line_frontend node -e "console.log({host:process.env.HOSTNAME,port:process.env.PORT});fetch('http://127.0.0.1:3000/login').then(r=>console.log(r.status)).catch(console.error)"
+```
+
+Compose กำหนด HOSTNAME=0.0.0.0 และ PORT=3000 ชัดเจน
+ให้ standalone server รับทุก interface และ healthcheck ใช้ loopback พอร์ตเดียวกัน
+พอร์ต 4024 อยู่ที่ nginx ฝั่ง host ไม่ใช่ PORT ของ Next.js container
+ถ้ายัง unhealthy ต้องดู error ใน runtime log ไม่ควรปิด healthcheck เพื่อฝืนเปิด nginx
+
 - GET http://IP-เซิร์ฟเวอร์:4024/login ต้องแสดงหน้า Login
 - POST /api/login จากเว็บต้องไป Backend 4025 ไม่ใช่ localhost ของผู้ใช้
 - 502 จาก /api หมายถึง nginx เชื่อม Backend ไม่สำเร็จ ให้ตรวจ Backend และ firewall
